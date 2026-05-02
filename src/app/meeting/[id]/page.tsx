@@ -190,7 +190,7 @@ export default function MeetingRoom() {
 
   return (
     <div className="flex flex-col h-screen bg-brand-light font-sans">
-      <Header roomId={roomId} onPrayerTime={(name) => setActivePrayer(name)} />
+      <Header roomId={roomId} isConnected={isConnected} onPrayerTime={(name) => setActivePrayer(name)} />
 
       <main className="flex-1 flex overflow-hidden relative p-4 gap-4">
         <div className="flex-1 flex flex-col gap-4 overflow-hidden">

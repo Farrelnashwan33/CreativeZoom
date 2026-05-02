@@ -14,6 +14,7 @@ export const useWebRTC = (roomId: string, userName: string) => {
   const [isHost, setIsHost] = useState(false);
   const [whiteboardActive, setWhiteboardActive] = useState(false);
   const [timer, setTimer] = useState<{ duration: number; startTime: number } | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
 
 
   const socketRef = useRef<Socket | null>(null);
@@ -22,13 +23,20 @@ export const useWebRTC = (roomId: string, userName: string) => {
 
   useEffect(() => {
     let isMounted = true;
-    const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3001' : 'https://creative-zoom.vercel.app');
+    const serverUrl = typeof window !== 'undefined' && window.location.hostname === 'localhost' 
+      ? 'http://localhost:3001' 
+      : 'https://creative-zoom-backend.onrender.com'; // Ganti dengan URL backend (Render/Railway/VPS) Anda
     const socketInstance = io(serverUrl);
     socketRef.current = socketInstance;
     setSocket(socketInstance);
 
     socketInstance.on('connect', () => {
+      setIsConnected(true);
       socketInstance.emit('join-room', { roomId, userName });
+    });
+
+    socketInstance.on('disconnect', () => {
+      setIsConnected(false);
     });
 
     function createPeer(userToSignal: string, callerId: string, stream: MediaStream) {
@@ -233,5 +241,5 @@ export const useWebRTC = (roomId: string, userName: string) => {
     }
   };
 
-  return { peers, myStream, socket, isHost, whiteboardActive, timer, setIsHost, toggleScreenShare };
+  return { peers, myStream, socket, isHost, whiteboardActive, timer, setIsHost, toggleScreenShare, isConnected };
 };

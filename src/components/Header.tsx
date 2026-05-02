@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Clock, Moon, Sun, CloudMoon } from 'lucide-react';
 
-export const Header = ({ roomId, onPrayerTime }: { roomId: string; onPrayerTime?: (name: string) => void }) => {
+export const Header = ({ roomId, onPrayerTime, isConnected }: { roomId: string; onPrayerTime?: (name: string) => void, isConnected?: boolean }) => {
   const [time, setTime] = useState(new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }));
   const [prayerTimes] = useState({
     Subuh: '04:35',
@@ -45,6 +45,12 @@ export const Header = ({ roomId, onPrayerTime }: { roomId: string; onPrayerTime?
         <div className="hidden md:flex items-center gap-2 bg-brand-light/50 px-3 py-1.5 rounded-lg border border-brand-light">
           <span className="text-[10px] font-bold text-brand-dark/40 uppercase">Room ID:</span>
           <span className="text-xs font-mono font-bold text-brand-blue">{roomId}</span>
+        </div>
+        <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border ${isConnected ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200 animate-pulse'}`}>
+          <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`} />
+          <span className={`text-[10px] font-bold uppercase tracking-wider ${isConnected ? 'text-green-700' : 'text-red-700'}`}>
+            {isConnected ? 'Terhubung' : 'Terputus'}
+          </span>
         </div>
       </div>
 
