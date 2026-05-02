@@ -1,26 +1,58 @@
 @import "tailwindcss";
 
+@theme {
+  --color-brand-blue: #1E3A8A;
+  --color-brand-dark: #111827;
+  --color-brand-gold: #D4AF37;
+  --color-brand-light: #F3F4F6;
+  
+  --font-sans: "Outfit", var(--font-geist-sans);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #F3F4F6;
+  --foreground: #111827;
+  --brand-blue: #1E3A8A;
+  --brand-gold: #D4AF37;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Mosque Nuance Background */
+.bg-mosque {
+  background-image: linear-gradient(rgba(30, 58, 138, 0.9), rgba(30, 58, 138, 0.7)), url('https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?auto=format&fit=crop&q=80&w=2070');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.glass-morphism {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  width: 100%;
+  height: 100%;
+}
+
+.control-btn {
+  @apply p-4 rounded-full transition-all duration-300 hover:scale-110 active:scale-95;
+}
+
+.control-btn-active {
+  @apply bg-brand-blue text-white shadow-lg;
+}
+
+.control-btn-inactive {
+  @apply bg-red-500 text-white shadow-lg;
 }

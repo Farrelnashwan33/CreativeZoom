@@ -1,65 +1,109 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Video, Users, Sparkles, MessageSquare } from 'lucide-react';
+import { motion } from 'framer-motion';
+
+export default function LandingPage() {
+  const [name, setName] = useState('');
+  const [roomId, setRoomId] = useState('');
+  const router = useRouter();
+
+  const handleCreateMeeting = () => {
+    if (!name) return alert('Silakan masukkan nama Anda');
+    const newRoomId = Math.random().toString(36).substring(2, 10);
+    localStorage.setItem('userName', name);
+    router.push(`/meeting/${newRoomId}`);
+  };
+
+  const handleJoinMeeting = () => {
+    if (!name || !roomId) return alert('Silakan masukkan nama dan ID Meeting');
+    localStorage.setItem('userName', name);
+    router.push(`/meeting/${roomId}`);
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className="min-h-screen bg-mosque flex flex-col items-center justify-center p-4">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden"
+      >
+        <div className="bg-brand-blue p-8 flex flex-col items-center text-white">
+          <div className="bg-white p-3 rounded-2xl mb-4 shadow-lg">
+            <img src="/logo.png" alt="Creative Zoom Logo" className="w-24 h-24 object-contain" />
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight">Creative Zoom</h1>
+          <p className="text-brand-light/80 mt-1 font-medium italic text-sm">
+            "Connect • Collaborate • Inspire"
           </p>
+          <div className="mt-4 px-4 py-1 bg-brand-gold/20 rounded-full border border-brand-gold/30 text-brand-gold text-xs font-semibold">
+            Masjid Al Ishlah Edition
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+
+        <div className="p-8 space-y-6">
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-brand-dark/70 ml-1">Nama Anda</label>
+            <input 
+              type="text" 
+              placeholder="Masukkan nama lengkap" 
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl border-2 border-brand-light focus:border-brand-blue focus:ring-0 transition-all outline-none text-brand-dark font-medium"
+              onKeyDown={(e) => e.key === 'Enter' && handleCreateMeeting()}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4">
+            <button 
+              onClick={handleCreateMeeting}
+              className="w-full py-4 bg-brand-blue hover:bg-brand-blue/90 text-white rounded-xl font-bold text-lg shadow-xl shadow-brand-blue/20 transition-all flex items-center justify-center gap-2 group"
+            >
+              <Video className="w-6 h-6 group-hover:scale-110 transition-transform" />
+              Mulai Meeting Baru
+            </button>
+
+            <div className="relative py-4">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-brand-light"></div>
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-white px-3 text-brand-dark/40 font-bold tracking-widest">Atau Gabung</span>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <input 
+                type="text" 
+                placeholder="Masukkan ID Meeting" 
+                value={roomId}
+                onChange={(e) => setRoomId(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border-2 border-brand-light focus:border-brand-blue transition-all outline-none text-brand-dark font-medium"
+                onKeyDown={(e) => e.key === 'Enter' && handleJoinMeeting()}
+              />
+              <button 
+                onClick={handleJoinMeeting}
+                className="w-full py-4 bg-white hover:bg-brand-light text-brand-blue border-2 border-brand-blue rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-2"
+              >
+                <Users className="w-6 h-6" />
+                Gabung Sekarang
+              </button>
+            </div>
+          </div>
         </div>
-      </main>
-    </div>
+
+        <div className="px-8 pb-8 flex justify-center gap-6 text-brand-dark/30">
+          <Sparkles className="w-5 h-5" />
+          <MessageSquare className="w-5 h-5" />
+          <Users className="w-5 h-5" />
+        </div>
+      </motion.div>
+
+      <footer className="mt-8 text-white/60 text-sm font-medium">
+        &copy; 2026 Creative Zoom - Masjid Al Ishlah
+      </footer>
+    </main>
   );
 }
