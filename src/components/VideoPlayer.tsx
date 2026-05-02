@@ -151,6 +151,23 @@ export const VideoPlayer = ({
           ref={canvasRef}
           className={`absolute inset-0 w-full h-full transition-opacity duration-300 ${objectFit === 'cover' ? 'object-cover' : 'object-contain'} ${isBlurred ? 'opacity-100' : 'opacity-0'} ${isLocal ? '-scale-x-100' : ''}`}
         />
+
+        {/* Placeholder when stream is loading */}
+        {!stream && (
+          <div className="absolute inset-0 flex items-center justify-center bg-brand-dark flex-col gap-4 z-0">
+             <div className="w-20 h-20 rounded-full bg-brand-blue flex items-center justify-center text-white text-3xl font-bold border-4 border-brand-gold/30">
+               {userName.charAt(0).toUpperCase()}
+             </div>
+             <div className="flex flex-col items-center gap-1">
+               <span className="text-white/50 text-[10px] font-bold tracking-[0.2em] uppercase">Menyambungkan</span>
+               <div className="flex gap-1">
+                 <div className="w-1.5 h-1.5 rounded-full bg-brand-gold animate-bounce" />
+                 <div className="w-1.5 h-1.5 rounded-full bg-brand-gold animate-bounce [animation-delay:0.2s]" />
+                 <div className="w-1.5 h-1.5 rounded-full bg-brand-gold animate-bounce [animation-delay:0.4s]" />
+               </div>
+             </div>
+          </div>
+        )}
       </div>
       
       {isLocal && (

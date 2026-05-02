@@ -22,7 +22,8 @@ export const useWebRTC = (roomId: string, userName: string) => {
 
   useEffect(() => {
     let isMounted = true;
-    const socketInstance = io('http://localhost:3001');
+    const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3001' : 'https://creative-zoom.vercel.app');
+    const socketInstance = io(serverUrl);
     socketRef.current = socketInstance;
     setSocket(socketInstance);
 
@@ -35,6 +36,12 @@ export const useWebRTC = (roomId: string, userName: string) => {
         initiator: true,
         trickle: false,
         stream,
+        config: { 
+          iceServers: [
+            { urls: 'stun:stun.l.google.com:19302' },
+            { urls: 'stun:global.stun.twilio.com:3478' }
+          ] 
+        }
       });
 
       peer.on('signal', (signal) => {
@@ -55,6 +62,12 @@ export const useWebRTC = (roomId: string, userName: string) => {
         initiator: false,
         trickle: false,
         stream,
+        config: { 
+          iceServers: [
+            { urls: 'stun:stun.l.google.com:19302' },
+            { urls: 'stun:global.stun.twilio.com:3478' }
+          ] 
+        }
       });
 
       peer.on('signal', (signal) => {
@@ -128,7 +141,10 @@ export const useWebRTC = (roomId: string, userName: string) => {
 
     socketInstance.on('receiving-returned-signal', ({ signal, id }) => {
       const item = peersRef.current.find((p) => p.peerId === id);
-      if (item) item.peer.signal(signal);
+      if (item) {
+        console.log("Receiving returned signal for:", id);
+        item.peer.signal(signal);
+      }
     });
 
     socketInstance.on('user-disconnected', (userId) => {
@@ -140,16 +156,29 @@ export const useWebRTC = (roomId: string, userName: string) => {
       setPeers((prev) => prev.filter((p) => p.peerId !== userId));
     });
 
+    socketInstance.on('connect_error', (err) => {
+      console.error("Socket connection error:", err);
+    });
+
     navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
       if (!isMounted) {
         stream.getTracks().forEach(track => track.stop());
         return;
       }
       
+      console.log("Local stream acquired");
       setMyStream(stream);
       userStreamRef.current = stream;
 
-      socketInstance.emit('join-room', { roomId, userName });
+      if (socketInstance.connected) {
+        console.log("Emitting join-room after stream acquired");
+        socketInstance.emit('join-room', { roomId, userName });
+      } else {
+        socketInstance.on('connect', () => {
+          console.log("Socket connected, emitting join-room");
+          socketInstance.emit('join-room', { roomId, userName });
+        });
+      }
     }).catch(err => {
       console.error("Error accessing media devices:", err);
     });

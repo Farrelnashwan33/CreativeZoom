@@ -228,15 +228,13 @@ export default function MeetingRoom() {
                   />
                 )}
                 {peers.map((peer) => (
-                  peer.stream && (
-                    <VideoPlayer 
-                      key={peer.peerId} 
-                      stream={peer.stream} 
-                      userName={peer.userName} 
-                      raisedHand={raisedHands[peer.peerId]}
-                      isBlurred={blurredParticipants[peer.peerId]}
-                    />
-                  )
+                  <VideoPlayer 
+                    key={peer.peerId} 
+                    stream={peer.stream!} 
+                    userName={peer.userName} 
+                    raisedHand={raisedHands[peer.peerId]}
+                    isBlurred={blurredParticipants[peer.peerId]}
+                  />
                 ))}
               </div>
             )}

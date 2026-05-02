@@ -12,7 +12,7 @@ interface InviteModalProps {
 
 export const InviteModal = ({ isOpen, onClose, roomId }: InviteModalProps) => {
   const [copied, setCopied] = useState(false);
-  const meetingLink = typeof window !== 'undefined' ? `${window.location.origin}/meeting/${roomId}` : '';
+  const meetingLink = `https://creative-zoom.vercel.app/meeting/${roomId}`;
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(meetingLink);
